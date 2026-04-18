@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:workertest;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchClientAutoConfiguration
+
+app:
+  s3:
+    access-key: test
+    secret-key: test
+    region: us-east-1
+    bucket: test-bucket
+    cdn-base-url: http://localhost:9000/test-bucket
+
+  worker:
+    concurrency: 1
+
+logging:
+  level:
+    com.recipeplatform: WARN
