@@ -4,19 +4,18 @@ services:
 
   # ── Infrastructure ─────────────────────────────────────────────────────────
 
-  postgres:
-    image: postgres:16-alpine
-    container_name: recipe_postgres
+  mysql:
+    image: mysql:8.0
+    container_name: recipe_mysql
     environment:
-      POSTGRES_DB: recipe_platform
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: recipe_platform
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -98,11 +97,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_HOST: mysql
+      DB_PORT: 3306
       DB_NAME: recipe_platform
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      DB_USER: root
+      DB_PASSWORD: root
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: guest
@@ -116,7 +115,7 @@ services:
       CDN_BASE_URL: http://localhost:9000/recipe-platform
       JWT_SECRET: change-me-to-a-long-random-secret-in-production!!
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -132,11 +131,11 @@ services:
       dockerfile: Dockerfile
     container_name: recipe_worker
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_HOST: mysql
+      DB_PORT: 3306
       DB_NAME: recipe_platform
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      DB_USER: root
+      DB_PASSWORD: root
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: guest
@@ -150,7 +149,7 @@ services:
       CDN_BASE_URL: http://localhost:9000/recipe-platform
       WORKER_CONCURRENCY: 3
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -161,7 +160,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
   rabbitmq_data:
   elasticsearch_data:
   minio_data:

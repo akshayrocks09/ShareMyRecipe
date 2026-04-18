@@ -1,5 +1,7 @@
 package com.recipeplatform.api.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(name = "spring.rabbitmq.host")
 public class RabbitMQConfig {
 
     // Exchange
@@ -68,22 +71,22 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding publishBinding(Queue publishQueue, TopicExchange recipeExchange) {
+    public Binding publishBinding(@Qualifier("publishQueue") Queue publishQueue, TopicExchange recipeExchange) {
         return BindingBuilder.bind(publishQueue).to(recipeExchange).with(ROUTING_PUBLISHED);
     }
 
     @Bean
-    public Binding updateBinding(Queue updateQueue, TopicExchange recipeExchange) {
+    public Binding updateBinding(@Qualifier("updateQueue") Queue updateQueue, TopicExchange recipeExchange) {
         return BindingBuilder.bind(updateQueue).to(recipeExchange).with(ROUTING_UPDATED);
     }
 
     @Bean
-    public Binding deleteBinding(Queue deleteQueue, TopicExchange recipeExchange) {
+    public Binding deleteBinding(@Qualifier("deleteQueue") Queue deleteQueue, TopicExchange recipeExchange) {
         return BindingBuilder.bind(deleteQueue).to(recipeExchange).with(ROUTING_DELETED);
     }
 
     @Bean
-    public Binding deadLetterBinding(Queue deadLetterQueue, DirectExchange deadLetterExchange) {
+    public Binding deadLetterBinding(@Qualifier("deadLetterQueue") Queue deadLetterQueue, DirectExchange deadLetterExchange) {
         return BindingBuilder.bind(deadLetterQueue).to(deadLetterExchange).with(DLQ_QUEUE);
     }
 

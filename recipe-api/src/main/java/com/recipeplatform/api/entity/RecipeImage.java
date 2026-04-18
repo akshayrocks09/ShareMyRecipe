@@ -41,6 +41,7 @@ public class RecipeImage {
     @Column(name = "sort_order")
     private int sortOrder;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "processing_state")
     private ProcessingState processingState = ProcessingState.PENDING;
