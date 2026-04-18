@@ -42,9 +42,11 @@ public class ChefProfile {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "chef", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Recipe> recipes = new HashSet<>();
 
+    @Builder.Default
     // Chefs this profile is following
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -54,6 +56,7 @@ public class ChefProfile {
     )
     private Set<ChefProfile> following = new HashSet<>();
 
+    @Builder.Default
     // Chefs that follow this profile
     @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
     private Set<ChefProfile> followers = new HashSet<>();

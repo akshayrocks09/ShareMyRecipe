@@ -33,21 +33,25 @@ public class Recipe {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Builder.Default
     // Stored as JSON array of {name, quantity, unit}
     @Convert(converter = RecipeJsonConverters.IngredientListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<IngredientItem> ingredients = new ArrayList<>();
 
+    @Builder.Default
     // Stored as JSON array of {stepNumber, instruction}
     @Convert(converter = RecipeJsonConverters.StepListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<StepItem> steps = new ArrayList<>();
 
+    @Builder.Default
     // Stored as JSON array of strings
     @Convert(converter = RecipeJsonConverters.LabelListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<String> labels = new ArrayList<>();
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RecipeState state = RecipeState.DRAFT;
@@ -63,6 +67,7 @@ public class Recipe {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("sortOrder ASC")
     private List<RecipeImage> images = new ArrayList<>();

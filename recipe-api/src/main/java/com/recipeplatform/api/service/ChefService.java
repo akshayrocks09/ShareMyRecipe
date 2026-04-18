@@ -79,7 +79,9 @@ public class ChefService {
         }
 
         follower.getFollowing().add(target);
+        target.getFollowers().add(follower);
         chefProfileRepository.save(follower);
+        chefProfileRepository.save(target);
     }
 
     @Transactional
@@ -95,7 +97,9 @@ public class ChefService {
         }
 
         follower.getFollowing().remove(target);
+        target.getFollowers().remove(follower);
         chefProfileRepository.save(follower);
+        chefProfileRepository.save(target);
     }
 
     // ── Mappers ──────────────────────────────────────────────────────────────

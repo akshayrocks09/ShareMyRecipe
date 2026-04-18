@@ -1,5 +1,6 @@
 package com.recipeplatform.api.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class ChefResponse {
         private long recipeCount;
         private long followerCount;
         private long followingCount;
+        @JsonProperty("isFollowedByMe")
         private boolean isFollowedByMe;
         private Instant createdAt;
     }
